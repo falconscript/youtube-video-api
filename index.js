@@ -4,7 +4,7 @@ const mime = require('mime')
 const merge = require('merge')
 const stream = require('stream')
 const parseUrl = require('url').parse
-const google = require('googleapis')
+const {google} = require('googleapis')
 const Nightmare = require('nightmare')
 const NightmareGoogle = require('nightmare-google-oauth2')
 const version = require('./package.json').version
@@ -30,7 +30,7 @@ exports.VERSION = version
 
 function YoutubeVideo (opts) {
   this._authenticated = false
-  this.opts = merge({ saveTokens: true }, opts)
+  this.opts = merge({ saveTokens: false, loadTokens: false }, opts)
 }
 
 YoutubeVideo.prototype.insert =
@@ -103,14 +103,13 @@ YoutubeVideo.prototype.authenticate = function (clientId, clientSecret, tokens, 
   }
 
   this.oauth = new OAuth2Client(clientId, clientSecret, REDIRECT_URL)
-  oauthLazyHandshake.call(this, tokens, cb)
-}
 
-function oauthLazyHandshake (tokens, cb) {
+
   const file = this.opts.file || CREDENTIALS_FILENAME
   const fetchCredentials = setCredentials.call(this, cb)
 
-  if (!tokens && fs.existsSync(file)) {
+  // load tokens only if flag set
+  if (!tokens && fs.existsSync(file) && self.opts.loadTokens) {
     tokens = JSON.parse(fs.readFileSync(file))
   }
 
@@ -118,15 +117,20 @@ function oauthLazyHandshake (tokens, cb) {
     return fetchCredentials(null, tokens)
   }
 
-  getAccessToken.call(this, fetchCredentials)
+  getAccessToken.bind(this)(clientId, clientSecret, fetchCredentials)
 }
 
-function getAccessToken (callback) {
+
+function getAccessToken (clientId, clientSecret, callback) {
   const params = {
     email: this.opts.email || process.env.GOOGLE_LOGIN_EMAIL,
     password: this.opts.password || process.env.GOOGLE_LOGIN_PASSWORD,
-    clientId: this.oauth.clientId_,
-    clientSecret: this.oauth.clientSecret_,
+    clientId: clientId,
+    clientSecret: clientSecret,
+    //grant_type: 'authorization_code',
+    //approval_prompt: "force",
+    //access_type: 'offline',
+    include_granted_scopes: true,
     useAccount: this.opts.useAccount,
     scope: this.opts.scope || SCOPE
   }
@@ -146,7 +150,7 @@ function setCredentials (cb) {
       return cb(err || new Error('Cannot retrieve OAuth2 tokens'))
     }
 
-    self.oauth.setCredentials(tokens)
+    self.oauth.credentials = tokens;
     self._authenticated = true
 
     if (self.opts.saveTokens) {

@@ -33,7 +33,7 @@ Example file:
 }
 ```
 
-Only `access_token` and `refresh_token` fields are mandatory.
+
  
 ## Command-line interface
 
@@ -94,10 +94,14 @@ var Youtube = require('youtube-video-api')
 ```
 
 ```js
+// Instantiate instance and define settings. NOTE: Tokens saved in json file will expire and will NOT be
+// automatically updated. The saveFile: true option is NOT recommended for systems that run a long time.
 var youtube = Youtube({ 
   video: {
     part: 'status,snippet' 
-  }
+  },
+  loadFile: true, // This will load the token from json file ALWAYS if present. False to prevent
+  saveFile: true, // This will save the token to json file ALWAYS. False to prevent
 })
 
 var params = {

@@ -17,12 +17,12 @@
   },
   "dependencies": {
     "decamelize": "^1.0.0",
-    "googleapis": "^1.1.4",
+    "googleapis": "^34.0.0",
     "lodash.omit": "^3.0.0",
     "merge": "^1.2.0",
     "mime": "^1.3.4",
     "nightmare": "^2.10.0",
-    "nightmare-google-oauth2": "^0.2.0",
+    "nightmare-google-oauth2": "git://github.com/falconscript/nightmare-google-oauth2.git",
     "yargs": "^3.5.4"
   },
   "devDependencies": {
