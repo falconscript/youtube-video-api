@@ -5,7 +5,6 @@ const merge = require('merge')
 const stream = require('stream')
 const parseUrl = require('url').parse
 const {google} = require('googleapis')
-const Nightmare = require('nightmare')
 const NightmareGoogle = require('nightmare-google-oauth2')
 const version = require('./package.json').version
 
@@ -135,11 +134,7 @@ function getAccessToken (clientId, clientSecret, callback) {
     scope: this.opts.scope || SCOPE
   }
 
-  new Nightmare()
-    .use(NightmareGoogle.getToken(params, callback))
-    .run(function (err) {
-      if (err) callback(err)
-    })
+  return NightmareGoogle.getToken(params, callback)
 }
 
 function setCredentials (cb) {
