@@ -1,7 +1,7 @@
 {
   "name": "youtube-video-api",
   "description": "Straightforward programmatic and command-line interface for YouTube Videos using Google API v3",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "repository": "h2non/youtube-video-api",
   "license": "MIT",
   "author": "Tomas Aparicio",
@@ -21,7 +21,7 @@
     "lodash.omit": "^3.0.0",
     "merge": "^1.2.0",
     "mime": "^1.3.4",
-    "nightmare-google-oauth2": "git://github.com/falconscript/nightmare-google-oauth2.git",
+    "nightmare-google-oauth2": "https://github.com/falconscript/nightmare-google-oauth2.git",
     "yargs": "^3.5.4"
   },
   "devDependencies": {
